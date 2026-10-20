@@ -1,0 +1,37 @@
+services:
+  - type: web
+    name: assethub-api
+    runtime: docker
+    plan: free
+    region: singapore
+    dockerContext: .
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: "10000"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: assethub-db
+          property: connectionString
+      - key: CORS_ORIGINS
+        value: https://addaganesha-maker.github.io
+      - key: JWT_SECRET
+        generateValue: true
+      - key: AGENT_API_KEY
+        generateValue: true
+      - key: ADMIN_EMAIL
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
+
+databases:
+  - name: assethub-db
+    databaseName: assethub
+    user: assethub
+    plan: free
+    region: singapore
+    postgresMajorVersion: "16"
+    ipAllowList: []
